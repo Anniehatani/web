@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-jakarta: "Plus Jakarta Sans", sans-serif;
+}
+
+body {
+  background-color: #ffffff; /* Trắng tinh khiết chuẩn Google Labs */
+  color: #1f2124; /* Màu đen xám Google Team USA */
+  font-family: var(--font-jakarta), sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #000000;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hệ thống lưới Grid vô hình siêu mảnh của Google */
+.google-grid {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
+/* Thanh cuộn tối giản */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
