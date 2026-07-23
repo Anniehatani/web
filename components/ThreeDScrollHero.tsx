@@ -14,9 +14,16 @@ export default function ThreeDScrollHero() {
 
   const totalFrames = 240;
 
-  // 1. TẢI TRƯỚC HÌNH ẢNH 3D NÂNG CAO (2 GIAI ĐOẠN + THROTTLED STATE UPDATES)
+  // 1. TẢI TRƯỚC HÌNH ẢNH 3D NÂNG CAO (CHỈ TẢI TRÊN PC, CHỐNG MOBILE TẢI HÀNG LOẠT 240 ẢNH)
   useEffect(() => {
     let isCancelled = false;
+
+    // NẾU LÀ MÀN HÌNH MOBILE (< 1024px): Bỏ qua việc tải 240 ảnh 3D để tiết kiệm 100% dung lượng mạng & RAM
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setIsPreloaded(true);
+      return;
+    }
+
     const loadedImages: HTMLImageElement[] = new Array(totalFrames);
     let loaded = 0;
     let lastReportedPercent = 0;
@@ -24,12 +31,10 @@ export default function ThreeDScrollHero() {
     const updateProgress = () => {
       loaded++;
       const percent = Math.floor((loaded / totalFrames) * 100);
-      // Chỉ update React state khi tăng >= 5% hoặc hoàn thành để tránh 240 lần re-render
       if (percent - lastReportedPercent >= 5 || loaded === totalFrames) {
         lastReportedPercent = percent;
         setLoadedCount(loaded);
       }
-      // Khung hình ban đầu (20 frames) nạp xong là có thể hiển thị tức thì cho người dùng
       if (loaded >= 20 && !isPreloaded) {
         setIsPreloaded(true);
       }
@@ -93,7 +98,7 @@ export default function ThreeDScrollHero() {
     };
   }, []);
 
-  // 2. LOGIC CUỘN
+  // 2. LOGIC CUỘN (DÀNH CHO PC)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
@@ -136,7 +141,7 @@ export default function ThreeDScrollHero() {
   // Ref lưu frame vừa vẽ gần nhất để tránh redraw trùng lắp
   const lastDrawnFrameRef = useRef<number>(-1);
 
-  // 3. ĐIỀU KHIỂN RENDER 3D CANVAS THEO SCROLL (GIỚI HẠN DPR + OPTIMIZED DRAW)
+  // 3. ĐIỀU KHIỂN RENDER 3D CANVAS THEO SCROLL
   useEffect(() => {
     if (!isPreloaded || images.length === 0) return;
 
@@ -154,7 +159,6 @@ export default function ThreeDScrollHero() {
         Math.max(0, Math.floor(frameProgress * totalFrames))
       );
 
-      // Nếu frameIndex giống frame vừa vẽ thì bỏ qua để tiết kiệm GPU
       if (frameIndex === lastDrawnFrameRef.current) return;
 
       const img = images[frameIndex];
@@ -179,7 +183,6 @@ export default function ThreeDScrollHero() {
 
     let resizeRafId: number;
     const resizeCanvas = () => {
-      // Giới hạn DPR: 1.0x trên Mobile để mượt 100%, 1.5x trên Desktop
       const isMobile = window.innerWidth < 768;
       const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = window.innerWidth * dpr;
@@ -187,7 +190,7 @@ export default function ThreeDScrollHero() {
       canvas.style.width = `${window.innerWidth}px`;
       canvas.style.height = `${window.innerHeight}px`;
       ctx.scale(dpr, dpr);
-      lastDrawnFrameRef.current = -1; // Reset để bắt buộc vẽ lại sau resize
+      lastDrawnFrameRef.current = -1;
       draw(smoothProgress.get());
     };
 
@@ -209,198 +212,252 @@ export default function ThreeDScrollHero() {
   }, [isPreloaded, images, smoothProgress]);
 
   return (
-    <div ref={containerRef} className="relative h-[350vh] bg-white">
-      {/* KHÓA TRỤC SCREEN */}
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex items-center justify-center z-10 bg-white google-grid">
-        
-        {/* Loading Overlay */}
-        {!isPreloaded && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-50">
-            <div className="w-64 sm:w-80 flex flex-col items-center gap-5">
-              <div className="relative w-full h-[4px] bg-neutral-100 rounded-full overflow-hidden shadow-inner">
-                <div 
-                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-neutral-900 to-neutral-600 transition-all duration-300 ease-out rounded-full" 
-                  style={{ width: `${(loadedCount / totalFrames) * 100}%` }}
-                >
-                  <div className="absolute inset-0 w-full h-full bg-white/20 animate-pulse mix-blend-overlay" />
-                </div>
-              </div>
-              <span className="text-[10px] font-semibold text-neutral-400 tracking-[0.3em] uppercase tabular-nums">
-                {Math.round((loadedCount / totalFrames) * 100)}%
-              </span>
+    <>
+      {/* MOBILE HERO: Siêu nhẹ, 0 tải 240 ảnh, load tức thì 0ms, không bẫy cuộn 350vh */}
+      <div className="block lg:hidden relative bg-black text-white py-16 px-6 overflow-hidden">
+        {/* Background video xem trước cực nhẹ cho mobile */}
+        <div className="absolute inset-0 opacity-30">
+          <video
+            src="/intro.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            controlsList="nodownload"
+            data-idm-members="disabled"
+            className="w-full h-full object-cover pointer-events-none"
+          />
+        </div>
+
+        <div className="relative z-10 max-w-lg mx-auto space-y-6 text-center">
+          <span className="text-[10px] font-mono text-neutral-300 tracking-[0.3em] uppercase block">
+            // Chiến dịch Smart AI-Learner
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
+            Học tập <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-400">
+              thông minh hơn
+            </span>
+            <br />
+            bằng AI
+          </h1>
+          <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed max-w-md mx-auto">
+            Một dự án của Nhóm Omni Artificial Intelligence (Sinh viên Đại học CMC). Cuộn xuống để bắt đầu hành trình học tập cá nhân hóa chuẩn Google.
+          </p>
+
+          <div className="pt-4 grid grid-cols-1 gap-3 text-left">
+            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 space-y-1">
+              <span className="text-[9px] font-mono text-neutral-400 block">01 // TỔNG QUAN</span>
+              <h3 className="text-xs font-bold text-white">Công nghệ lõi định hình tương lai</h3>
+              <p className="text-[11px] text-neutral-300 leading-relaxed font-light">Sức mạnh trí tuệ nhân tạo được thiết kế riêng biệt giúp việc tiếp thu kiến thức trực quan và sinh động.</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 space-y-1">
+              <span className="text-[9px] font-mono text-neutral-400 block">02 // LỢI ÍCH</span>
+              <h3 className="text-xs font-bold text-white">Chủ động cá nhân hóa</h3>
+              <p className="text-[11px] text-neutral-300 leading-relaxed font-light">Tự động phân tích lộ trình học tập tối ưu theo sát tốc độ tiếp thu của từng cá nhân.</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 space-y-1">
+              <span className="text-[9px] font-mono text-neutral-400 block">03 // PHÁT TRIỂN</span>
+              <h3 className="text-xs font-bold text-white">Nâng tầm tư duy phản biện</h3>
+              <p className="text-[11px] text-neutral-300 leading-relaxed font-light">AI gợi mở hướng giải quyết vấn đề và rèn luyện tư duy logic phản biện đa chiều.</p>
             </div>
           </div>
-        )}
+        </div>
+      </div>
 
-        {isPreloaded && (
-          <>
-            {/* 3D CANVAS (BÊN PHẢI) */}
-            <motion.div 
-              style={{ opacity: canvasOpacity, scale: canvasScale, x: canvasX }}
-              className="absolute inset-0 w-full h-full pointer-events-none mix-blend-darken flex justify-end"
-            >
-              <canvas ref={canvasRef} className="absolute inset-0 block w-full h-full object-cover mix-blend-darken pointer-events-none opacity-90" />
-            </motion.div>
-
-            {/* SPINDLE WATERMARK (MÀN 2 - 01 TỔNG QUAN) */}
-            <motion.div
-              style={{ 
-                opacity: spiralOpacity, 
-                scale: spiralScale, 
-                rotate: spiralRotate,
-                willChange: "transform",
-                transform: "translateZ(0)"
-              }}
-              className="absolute inset-0 w-full h-full pointer-events-none z-10 flex items-center justify-center overflow-hidden"
-            >
-              <svg
-                viewBox="0 0 1000 1000"
-                className="w-[90vw] h-[90vw] max-w-[850px] max-h-[850px] text-neutral-400"
-              >
-                <defs>
-                  <path
-                    id="circle-path"
-                    d="M 500 500 m -250 0 a 250 250 0 1 1 500 0 a 250 250 0 1 1 -500 0"
-                    fill="none"
-                    stroke="none"
-                  />
-                </defs>
-                <text className="fill-black font-black tracking-[0.12em] text-[26px] uppercase">
-                  <textPath href="#circle-path" startOffset="0%">
-                    {"OMNI AI • FUTURE LEARNING • CORE TECHNOLOGY • INNOVATION • SECURITY • ".repeat(2)}
-                  </textPath>
-                </text>
-              </svg>
-            </motion.div>
-
-            <div className="absolute inset-0 w-full h-full z-20 flex pointer-events-none items-center">
-              <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 px-5 md:px-16 items-center">
-                
-                {/* CỘT TRÁI: TEXT HERO & TEXT TUẦN TỰ */}
-                <div className="relative h-[220px] md:h-[400px] flex items-center">
-                  
-                  {/* Text Hero (Màn 1) */}
-                  <motion.div 
-                    style={{ opacity: heroTextOpacity, y: heroTextY }}
-                    className="absolute inset-0 flex flex-col justify-center pointer-events-none"
+      {/* DESKTOP HERO: Giữ nguyên 100% toàn bộ trải nghiệm Canvas 3D 240 ảnh + video parallax + spiral text */}
+      <div ref={containerRef} className="hidden lg:block relative h-[350vh] bg-white">
+        {/* KHÓA TRỤC SCREEN */}
+        <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex items-center justify-center z-10 bg-white google-grid">
+          
+          {/* Loading Overlay */}
+          {!isPreloaded && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-50">
+              <div className="w-64 sm:w-80 flex flex-col items-center gap-5">
+                <div className="relative w-full h-[4px] bg-neutral-100 rounded-full overflow-hidden shadow-inner">
+                  <div 
+                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-neutral-900 to-neutral-600 transition-all duration-300 ease-out rounded-full" 
+                    style={{ width: `${(loadedCount / totalFrames) * 100}%` }}
                   >
-                    {/* Lớp phủ radial-gradient sau lưng khối chữ để đảm bảo độ tương phản */}
-                    <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[800px] h-[600px] bg-[radial-gradient(circle_at_left_center,_rgba(0,0,0,0.5)_0%,_transparent_70%)] -z-10 blur-2xl" />
-
-                    <span className="text-[10px] font-mono text-neutral-300 tracking-[0.3em] uppercase block mb-6 drop-shadow-md">
-                      // Chiến dịch Smart AI-Learner
-                    </span>
-                    <h1 
-                      className="text-[2.5rem] leading-[1.1] md:text-[5.5rem] font-medium tracking-tight text-white md:leading-[1.05]"
-                      style={{ textShadow: "0 10px 40px rgba(0,0,0,0.4)" }}
-                    >
-                      Học tập <br />
-                      <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-300">
-                        thông minh hơn
-                      </span>
-                      <br />
-                      bằng AI
-                    </h1>
-                    <p className="text-sm md:text-lg text-white/80 font-light mt-4 md:mt-8 max-w-xl leading-relaxed drop-shadow-lg">
-                      Một dự án của Nhóm Omni Artificial Intelligence (Sinh viên Đại học CMC). Cuộn chuột để bắt đầu hành trình học tập cá nhân hóa chuẩn Google.
-                    </p>
-                  </motion.div>
-
-                  {/* Text Tuần Tự (Màn 2) */}
-                  {/* Khối 1 */}
-                  <motion.div 
-                    style={{ y: block1Y, opacity: block1Opacity }}
-                    className="absolute inset-0 flex flex-col justify-center pointer-events-none"
-                  >
-                    <span className="text-[10px] font-mono text-neutral-400 tracking-[0.3em] uppercase mb-4">
-                      01 // Tổng Quan
-                    </span>
-                    <h2 className="text-[2rem] md:text-5xl font-light text-[#1f2124] mb-3 md:mb-6 leading-tight">
-                      Công nghệ lõi <br/>
-                      <span className="font-medium text-blue-600">
-                        Định hình tương lai
-                      </span>
-                    </h2>
-                    <p className="text-sm md:text-lg text-neutral-500 leading-relaxed max-w-md font-light">
-                      Sức mạnh của trí tuệ nhân tạo giờ đây được thiết kế riêng biệt để hỗ trợ trải nghiệm học tập, giúp việc tiếp thu kiến thức trở nên trực quan, sinh động hơn bao giờ hết.
-                    </p>
-                  </motion.div>
-
-                  {/* Khối 2 */}
-                  <motion.div 
-                    style={{ y: block2Y, opacity: block2Opacity }}
-                    className="absolute inset-0 flex flex-col justify-center pointer-events-none"
-                  >
-                    <span className="text-[10px] font-mono text-neutral-400 tracking-[0.3em] uppercase mb-4">
-                      02 // Lợi ích
-                    </span>
-                    <h2 className="text-[2rem] md:text-5xl font-light text-[#1f2124] mb-3 md:mb-6 leading-tight">
-                      Chủ động <br/>
-                      <span className="font-medium text-emerald-600">
-                        Cá nhân hóa
-                      </span>
-                    </h2>
-                    <p className="text-sm md:text-lg text-neutral-500 leading-relaxed max-w-md font-light">
-                      Hệ thống sẽ tự động phân tích và đưa ra lộ trình học tập tối ưu, theo sát tốc độ, khả năng tiếp thu và sở thích của từng cá nhân để đạt được hiệu quả vượt trội.
-                    </p>
-                  </motion.div>
-
-                  {/* Khối 3 */}
-                  <motion.div 
-                    style={{ y: block3Y, opacity: block3Opacity }}
-                    className="absolute inset-0 flex flex-col justify-center pointer-events-none"
-                  >
-                    <span className="text-[10px] font-mono text-neutral-400 tracking-[0.3em] uppercase mb-4">
-                      03 // Phát triển
-                    </span>
-                    <h2 className="text-[2rem] md:text-5xl font-light text-[#1f2124] mb-3 md:mb-6 leading-tight">
-                      Nâng tầm <br/>
-                      <span className="font-medium text-purple-600">
-                        Tư duy phản biện
-                      </span>
-                    </h2>
-                    <p className="text-sm md:text-lg text-neutral-500 leading-relaxed max-w-md font-light">
-                      AI không chỉ cung cấp đáp án mà còn gợi mở hướng giải quyết vấn đề, rèn luyện tư duy logic, phản biện đa chiều và định hướng kỹ năng mềm quan trọng.
-                    </p>
-                  </motion.div>
-
+                    <div className="absolute inset-0 w-full h-full bg-white/20 animate-pulse mix-blend-overlay" />
+                  </div>
                 </div>
-
-                {/* CỘT PHẢI: VIDEO */}
-                <div className="relative h-[220px] md:h-[600px] w-full flex items-center justify-center lg:justify-end">
-                  <motion.div 
-                    style={{ y: videoY, opacity: videoOpacity }}
-                    className="relative w-full max-w-lg aspect-video rounded-2xl md:rounded-[24px] overflow-hidden shadow-[0_15px_50px_rgba(0,0,0,0.04)] border border-[#e8eaed] bg-white pointer-events-auto"
-                  >
-                    <video
-                      src="/intro.mp4"
-                      autoPlay
-                      loop
-                      muted={isMuted}
-                      playsInline
-                      controlsList="nodownload"
-                      data-idm-members="disabled"
-                      className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-                    />
-                    
-                    <button
-                      onClick={() => setIsMuted(!isMuted)}
-                      className="absolute bottom-4 right-4 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/60 backdrop-blur-md border border-white transition-all hover:bg-white group"
-                      aria-label="Toggle sound"
-                    >
-                      <div className="flex items-end justify-center gap-[3px] h-4">
-                        <motion.div animate={{ height: isMuted ? 4 : [4, 12, 4] }} transition={{ repeat: Infinity, duration: 0.8 }} className={`w-[2px] rounded-full transition-colors ${isMuted ? 'bg-neutral-800/50' : 'bg-neutral-800'}`} />
-                        <motion.div animate={{ height: isMuted ? 4 : [4, 16, 4] }} transition={{ repeat: Infinity, duration: 0.9, delay: 0.1 }} className={`w-[2px] rounded-full transition-colors ${isMuted ? 'bg-neutral-800/50' : 'bg-neutral-800'}`} />
-                        <motion.div animate={{ height: isMuted ? 4 : [4, 8, 4] }} transition={{ repeat: Infinity, duration: 0.7, delay: 0.2 }} className={`w-[2px] rounded-full transition-colors ${isMuted ? 'bg-neutral-800/50' : 'bg-neutral-800'}`} />
-                      </div>
-                    </button>
-                  </motion.div>
-                </div>
+                <span className="text-[10px] font-semibold text-neutral-400 tracking-[0.3em] uppercase tabular-nums">
+                  {Math.round((loadedCount / totalFrames) * 100)}%
+                </span>
               </div>
             </div>
-          </>
-        )}
+          )}
+
+          {isPreloaded && (
+            <>
+              {/* 3D CANVAS (BÊN PHẢI) */}
+              <motion.div 
+                style={{ opacity: canvasOpacity, scale: canvasScale, x: canvasX }}
+                className="absolute inset-0 w-full h-full pointer-events-none mix-blend-darken flex justify-end"
+              >
+                <canvas ref={canvasRef} className="absolute inset-0 block w-full h-full object-cover mix-blend-darken pointer-events-none opacity-90" />
+              </motion.div>
+
+              {/* SPINDLE WATERMARK (MÀN 2 - 01 TỔNG QUAN) */}
+              <motion.div
+                style={{ 
+                  opacity: spiralOpacity, 
+                  scale: spiralScale, 
+                  rotate: spiralRotate,
+                  willChange: "transform",
+                  transform: "translateZ(0)"
+                }}
+                className="absolute inset-0 w-full h-full pointer-events-none z-10 flex items-center justify-center overflow-hidden"
+              >
+                <svg
+                  viewBox="0 0 1000 1000"
+                  className="w-[90vw] h-[90vw] max-w-[850px] max-h-[850px] text-neutral-400"
+                >
+                  <defs>
+                    <path
+                      id="circle-path"
+                      d="M 500 500 m -250 0 a 250 250 0 1 1 500 0 a 250 250 0 1 1 -500 0"
+                      fill="none"
+                      stroke="none"
+                    />
+                  </defs>
+                  <text className="fill-black font-black tracking-[0.12em] text-[26px] uppercase">
+                    <textPath href="#circle-path" startOffset="0%">
+                      {"OMNI AI • FUTURE LEARNING • CORE TECHNOLOGY • INNOVATION • SECURITY • ".repeat(2)}
+                    </textPath>
+                  </text>
+                </svg>
+              </motion.div>
+
+              <div className="absolute inset-0 w-full h-full z-20 flex pointer-events-none items-center">
+                <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 px-5 md:px-16 items-center">
+                  
+                  {/* CỘT TRÁI: TEXT HERO & TEXT TUẦN TỰ */}
+                  <div className="relative h-[220px] md:h-[400px] flex items-center">
+                    
+                    {/* Text Hero (Màn 1) */}
+                    <motion.div 
+                      style={{ opacity: heroTextOpacity, y: heroTextY }}
+                      className="absolute inset-0 flex flex-col justify-center pointer-events-none"
+                    >
+                      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[800px] h-[600px] bg-[radial-gradient(circle_at_left_center,_rgba(0,0,0,0.5)_0%,_transparent_70%)] -z-10 blur-2xl" />
+
+                      <span className="text-[10px] font-mono text-neutral-300 tracking-[0.3em] uppercase block mb-6 drop-shadow-md">
+                        // Chiến dịch Smart AI-Learner
+                      </span>
+                      <h1 
+                        className="text-[2.5rem] leading-[1.1] md:text-[5.5rem] font-medium tracking-tight text-white md:leading-[1.05]"
+                        style={{ textShadow: "0 10px 40px rgba(0,0,0,0.4)" }}
+                      >
+                        Học tập <br />
+                        <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-300">
+                          thông minh hơn
+                        </span>
+                        <br />
+                        bằng AI
+                      </h1>
+                      <p className="text-sm md:text-lg text-white/80 font-light mt-4 md:mt-8 max-w-xl leading-relaxed drop-shadow-lg">
+                        Một dự án của Nhóm Omni Artificial Intelligence (Sinh viên Đại học CMC). Cuộn chuột để bắt đầu hành trình học tập cá nhân hóa chuẩn Google.
+                      </p>
+                    </motion.div>
+
+                    {/* Text Tuần Tự (Màn 2) */}
+                    {/* Khối 1 */}
+                    <motion.div 
+                      style={{ y: block1Y, opacity: block1Opacity }}
+                      className="absolute inset-0 flex flex-col justify-center pointer-events-none"
+                    >
+                      <span className="text-[10px] font-mono text-neutral-400 tracking-[0.3em] uppercase mb-4">
+                        01 // Tổng Quan
+                      </span>
+                      <h2 className="text-[2rem] md:text-5xl font-light text-[#1f2124] mb-3 md:mb-6 leading-tight">
+                        Công nghệ lõi <br/>
+                        <span className="font-medium text-blue-600">
+                          Định hình tương lai
+                        </span>
+                      </h2>
+                      <p className="text-sm md:text-lg text-neutral-500 leading-relaxed max-w-md font-light">
+                        Sức mạnh của trí tuệ nhân tạo giờ đây được thiết kế riêng biệt để hỗ trợ trải nghiệm học tập, giúp việc tiếp thu kiến thức trở nên trực quan, sinh động hơn bao giờ hết.
+                      </p>
+                    </motion.div>
+
+                    {/* Khối 2 */}
+                    <motion.div 
+                      style={{ y: block2Y, opacity: block2Opacity }}
+                      className="absolute inset-0 flex flex-col justify-center pointer-events-none"
+                    >
+                      <span className="text-[10px] font-mono text-neutral-400 tracking-[0.3em] uppercase mb-4">
+                        02 // Lợi ích
+                      </span>
+                      <h2 className="text-[2rem] md:text-5xl font-light text-[#1f2124] mb-3 md:mb-6 leading-tight">
+                        Chủ động <br/>
+                        <span className="font-medium text-emerald-600">
+                          Cá nhân hóa
+                        </span>
+                      </h2>
+                      <p className="text-sm md:text-lg text-neutral-500 leading-relaxed max-w-md font-light">
+                        Hệ thống sẽ tự động phân tích và đưa ra lộ trình học tập tối ưu, theo sát tốc độ, khả năng tiếp thu và sở thích của từng cá nhân để đạt được hiệu quả vượt trội.
+                      </p>
+                    </motion.div>
+
+                    {/* Khối 3 */}
+                    <motion.div 
+                      style={{ y: block3Y, opacity: block3Opacity }}
+                      className="absolute inset-0 flex flex-col justify-center pointer-events-none"
+                    >
+                      <span className="text-[10px] font-mono text-neutral-400 tracking-[0.3em] uppercase mb-4">
+                        03 // Phát triển
+                      </span>
+                      <h2 className="text-[2rem] md:text-5xl font-light text-[#1f2124] mb-3 md:mb-6 leading-tight">
+                        Nâng tầm <br/>
+                        <span className="font-medium text-purple-600">
+                          Tư duy phản biện
+                        </span>
+                      </h2>
+                      <p className="text-sm md:text-lg text-neutral-500 leading-relaxed max-w-md font-light">
+                        AI không chỉ cung cấp đáp án mà còn gợi mở hướng giải quyết vấn đề, rèn luyện tư duy logic, phản biện đa chiều và định hướng kỹ năng mềm quan trọng.
+                      </p>
+                    </motion.div>
+
+                  </div>
+
+                  {/* CỘT PHẢI: VIDEO */}
+                  <div className="relative h-[220px] md:h-[600px] w-full flex items-center justify-center lg:justify-end">
+                    <motion.div 
+                      style={{ y: videoY, opacity: videoOpacity }}
+                      className="relative w-full max-w-lg aspect-video rounded-2xl md:rounded-[24px] overflow-hidden shadow-[0_15px_50px_rgba(0,0,0,0.04)] border border-[#e8eaed] bg-white pointer-events-auto"
+                    >
+                      <video
+                        src="/intro.mp4"
+                        autoPlay
+                        loop
+                        muted={isMuted}
+                        playsInline
+                        controlsList="nodownload"
+                        data-idm-members="disabled"
+                        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                      />
+                      
+                      <button
+                        onClick={() => setIsMuted(!isMuted)}
+                        className="absolute bottom-4 right-4 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/60 backdrop-blur-md border border-white transition-all hover:bg-white group"
+                        aria-label="Toggle sound"
+                      >
+                        <div className="flex items-end justify-center gap-[3px] h-4">
+                          <motion.div animate={{ height: isMuted ? 4 : [4, 12, 4] }} transition={{ repeat: Infinity, duration: 0.8 }} className={`w-[2px] rounded-full transition-colors ${isMuted ? 'bg-neutral-800/50' : 'bg-neutral-800'}`} />
+                          <motion.div animate={{ height: isMuted ? 4 : [4, 16, 4] }} transition={{ repeat: Infinity, duration: 0.9, delay: 0.1 }} className={`w-[2px] rounded-full transition-colors ${isMuted ? 'bg-neutral-800/50' : 'bg-neutral-800'}`} />
+                          <motion.div animate={{ height: isMuted ? 4 : [4, 8, 4] }} transition={{ repeat: Infinity, duration: 0.7, delay: 0.2 }} className={`w-[2px] rounded-full transition-colors ${isMuted ? 'bg-neutral-800/50' : 'bg-neutral-800'}`} />
+                        </div>
+                      </button>
+                    </motion.div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
