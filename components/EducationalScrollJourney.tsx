@@ -114,15 +114,15 @@ export default function EducationalScrollJourney() {
   const cardRotate2 = useTransform(smoothProgress, [0.22, 0.36, 0.62, 0.72], [6, 0, 0, -6]);
   const cardRotate3 = useTransform(smoothProgress, [0.55, 0.68, 1], [6, 0, 0]);
 
-  // 2. Chữ nền Parallax đồng bộ hoàn hảo từng Stage (Opacity chạy mượt, nổi bật đằng sau thẻ)
+  // 2. Chữ nền Parallax đồng bộ hoàn hảo từng Stage (Opacity 0.28 rõ nét đằng sau thẻ kính)
   const bgTextX1 = useTransform(smoothProgress, [0, 0.38], ["0%", "-30%"]);
-  const bgOpacity1 = useTransform(smoothProgress, [0, 0.28, 0.35], [0.15, 0.15, 0]);
+  const bgOpacity1 = useTransform(smoothProgress, [0, 0.28, 0.35], [0.28, 0.28, 0]);
 
   const bgTextX2 = useTransform(smoothProgress, [0.22, 0.72], ["15%", "-15%"]);
-  const bgOpacity2 = useTransform(smoothProgress, [0.25, 0.35, 0.62, 0.68], [0, 0.15, 0.15, 0]);
+  const bgOpacity2 = useTransform(smoothProgress, [0.25, 0.35, 0.62, 0.68], [0, 0.28, 0.28, 0]);
 
   const bgTextX3 = useTransform(smoothProgress, [0.55, 1], ["20%", "-10%"]);
-  const bgOpacity3 = useTransform(smoothProgress, [0.58, 0.68, 1], [0, 0.15, 0.15]);
+  const bgOpacity3 = useTransform(smoothProgress, [0.58, 0.68, 1], [0, 0.28, 0.28]);
 
   // Hàm sinh dải chữ nối đuôi nhau liên tục
   const renderLoopingText = (text: string) => {
@@ -207,13 +207,13 @@ export default function EducationalScrollJourney() {
             </motion.div>
           </div>
 
-          {/* CỘT PHẢI: KHU VỰC THẺ SLIDE TRƯỢT (BẢNG TRONG SUỐT NHÌN THẤY CHỮ ĐẰNG SAU) */}
+          {/* CỘT PHẢI: KHU VỰC THẺ SLIDE TRƯỢT (BẢNG TRONG SUỐT NHÌN RÕ CHỮ ĐẰNG SAU) */}
           <div className="lg:col-span-9 relative w-full h-[75vh] flex items-center justify-center">
 
             {/* STAGE 1 CARD */}
             <motion.div
               style={{ x: cardX1, rotate: cardRotate1, transformOrigin: "bottom center" }}
-              className="absolute inset-0 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start lg:items-center bg-white/60 backdrop-blur-3xl saturate-150 border border-white/80 rounded-2xl lg:rounded-[32px] p-5 lg:p-12 shadow-[0_30px_80px_rgba(0,0,0,0.08)] overflow-y-auto lg:overflow-visible"
+              className="absolute inset-0 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start lg:items-center bg-white/35 backdrop-blur-xl border border-white/80 rounded-2xl lg:rounded-[32px] p-5 lg:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.06)] overflow-y-auto lg:overflow-visible"
             >
               <div className="lg:col-span-5 space-y-4 lg:space-y-6">
                 <span className="px-3 py-1 bg-black text-white rounded-full text-[9px] font-bold tracking-widest w-max block">
@@ -239,7 +239,7 @@ export default function EducationalScrollJourney() {
               </div>
 
               {/* Giao diện ví dụ Prompt của Stage 1 */}
-              <div className="lg:col-span-7 bg-white/40 backdrop-blur-md border border-black/[0.05] rounded-2xl p-4 lg:p-8 space-y-4 lg:space-y-6 h-full flex flex-col justify-between mt-2 lg:mt-0">
+              <div className="lg:col-span-7 bg-white/30 backdrop-blur-sm border border-black/[0.06] rounded-2xl p-4 lg:p-8 space-y-4 lg:space-y-6 h-full flex flex-col justify-between mt-2 lg:mt-0">
                 <div>
                   <h4 className="text-sm font-bold text-black mb-1">{educationalLevels[0].promptExample.title}</h4>
                   <p className="text-[11px] text-black opacity-60 font-medium">{educationalLevels[0].promptExample.description}</p>
@@ -251,7 +251,7 @@ export default function EducationalScrollJourney() {
                       <span className="w-1.5 h-1.5 rounded-full bg-black opacity-30" />
                       <span className="text-[10px] font-bold text-black opacity-55 uppercase tracking-wider">PROMPT CHƯA TỐI ƯU</span>
                     </div>
-                    <div className="bg-white/80 backdrop-blur-sm border border-black/[0.05] rounded-xl p-3 text-xs text-black font-medium italic opacity-75">
+                    <div className="bg-white/40 backdrop-blur-sm border border-black/[0.06] rounded-xl p-3 text-xs text-black font-medium italic opacity-75">
                       “{educationalLevels[0].promptExample.badPrompt}”
                     </div>
                   </div>
@@ -261,13 +261,13 @@ export default function EducationalScrollJourney() {
                       <span className="w-1.5 h-1.5 rounded-full bg-black" />
                       <span className="text-[10px] font-bold text-black uppercase tracking-wider">PROMPT TIÊU CHUẨN</span>
                     </div>
-                    <div className="bg-white/90 backdrop-blur-sm border border-black/[0.08] rounded-xl p-3 text-xs text-black font-bold">
+                    <div className="bg-white/60 backdrop-blur-sm border border-black/[0.08] rounded-xl p-3 text-xs text-black font-bold">
                       “{educationalLevels[0].promptExample.goodPrompt}”
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white/80 backdrop-blur-sm border border-black/[0.05] rounded-xl p-4 text-[11px] text-black font-mono leading-relaxed max-h-36 overflow-y-auto">
+                <div className="bg-white/40 backdrop-blur-sm border border-black/[0.06] rounded-xl p-4 text-[11px] text-black font-mono leading-relaxed max-h-36 overflow-y-auto">
                   {educationalLevels[0].promptExample.simulatedResponse}
                 </div>
               </div>
@@ -276,7 +276,7 @@ export default function EducationalScrollJourney() {
             {/* STAGE 2 CARD */}
             <motion.div
               style={{ x: cardX2, rotate: cardRotate2, transformOrigin: "bottom center" }}
-              className="absolute inset-0 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start lg:items-center bg-white/60 backdrop-blur-3xl saturate-150 border border-white/80 rounded-2xl lg:rounded-[32px] p-5 lg:p-12 shadow-[0_30px_80px_rgba(0,0,0,0.08)] overflow-y-auto lg:overflow-visible"
+              className="absolute inset-0 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start lg:items-center bg-white/35 backdrop-blur-xl border border-white/80 rounded-2xl lg:rounded-[32px] p-5 lg:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.06)] overflow-y-auto lg:overflow-visible"
             >
               <div className="lg:col-span-5 space-y-4 lg:space-y-6">
                 <span className="px-3 py-1 bg-black text-white rounded-full text-[9px] font-bold tracking-widest w-max block">
@@ -302,7 +302,7 @@ export default function EducationalScrollJourney() {
               </div>
 
               {/* Giao diện ví dụ Prompt của Stage 2 */}
-              <div className="lg:col-span-7 bg-white/40 backdrop-blur-md border border-black/[0.05] rounded-2xl p-4 lg:p-8 space-y-4 lg:space-y-6 h-full flex flex-col justify-between mt-2 lg:mt-0">
+              <div className="lg:col-span-7 bg-white/30 backdrop-blur-sm border border-black/[0.06] rounded-2xl p-4 lg:p-8 space-y-4 lg:space-y-6 h-full flex flex-col justify-between mt-2 lg:mt-0">
                 <div>
                   <h4 className="text-sm font-bold text-black mb-1">{educationalLevels[1].promptExample.title}</h4>
                   <p className="text-[11px] text-black opacity-60 font-medium">{educationalLevels[1].promptExample.description}</p>
@@ -314,7 +314,7 @@ export default function EducationalScrollJourney() {
                       <span className="w-1.5 h-1.5 rounded-full bg-black opacity-30" />
                       <span className="text-[10px] font-bold text-black opacity-55 uppercase tracking-wider">PROMPT CHƯA TỐI ƯU</span>
                     </div>
-                    <div className="bg-white/80 backdrop-blur-sm border border-black/[0.05] rounded-xl p-3 text-xs text-black font-medium italic opacity-75">
+                    <div className="bg-white/40 backdrop-blur-sm border border-black/[0.06] rounded-xl p-3 text-xs text-black font-medium italic opacity-75">
                       “{educationalLevels[1].promptExample.badPrompt}”
                     </div>
                   </div>
@@ -324,13 +324,13 @@ export default function EducationalScrollJourney() {
                       <span className="w-1.5 h-1.5 rounded-full bg-black" />
                       <span className="text-[10px] font-bold text-black uppercase tracking-wider">PROMPT TIÊU CHUẨN</span>
                     </div>
-                    <div className="bg-white/90 backdrop-blur-sm border border-black/[0.08] rounded-xl p-3 text-xs text-black font-bold">
+                    <div className="bg-white/60 backdrop-blur-sm border border-black/[0.08] rounded-xl p-3 text-xs text-black font-bold">
                       “{educationalLevels[1].promptExample.goodPrompt}”
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white/80 backdrop-blur-sm border border-black/[0.05] rounded-xl p-4 text-[11px] text-black font-mono leading-relaxed max-h-36 overflow-y-auto">
+                <div className="bg-white/40 backdrop-blur-sm border border-black/[0.06] rounded-xl p-4 text-[11px] text-black font-mono leading-relaxed max-h-36 overflow-y-auto">
                   {educationalLevels[1].promptExample.simulatedResponse}
                 </div>
               </div>
@@ -339,7 +339,7 @@ export default function EducationalScrollJourney() {
             {/* STAGE 3 CARD */}
             <motion.div
               style={{ x: cardX3, rotate: cardRotate3, transformOrigin: "bottom center" }}
-              className="absolute inset-0 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start lg:items-center bg-white/60 backdrop-blur-3xl saturate-150 border border-white/80 rounded-2xl lg:rounded-[32px] p-5 lg:p-12 shadow-[0_30px_80px_rgba(0,0,0,0.08)] overflow-y-auto lg:overflow-visible"
+              className="absolute inset-0 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start lg:items-center bg-white/35 backdrop-blur-xl border border-white/80 rounded-2xl lg:rounded-[32px] p-5 lg:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.06)] overflow-y-auto lg:overflow-visible"
             >
               <div className="lg:col-span-5 space-y-4 lg:space-y-6">
                 <span className="px-3 py-1 bg-black text-white rounded-full text-[9px] font-bold tracking-widest w-max block">
@@ -365,7 +365,7 @@ export default function EducationalScrollJourney() {
               </div>
 
               {/* Giao diện ví dụ Prompt của Stage 3 */}
-              <div className="lg:col-span-7 bg-white/40 backdrop-blur-md border border-black/[0.05] rounded-2xl p-4 lg:p-8 space-y-4 lg:space-y-6 h-full flex flex-col justify-between mt-2 lg:mt-0">
+              <div className="lg:col-span-7 bg-white/30 backdrop-blur-sm border border-black/[0.06] rounded-2xl p-4 lg:p-8 space-y-4 lg:space-y-6 h-full flex flex-col justify-between mt-2 lg:mt-0">
                 <div>
                   <h4 className="text-sm font-bold text-black mb-1">{educationalLevels[2].promptExample.title}</h4>
                   <p className="text-[11px] text-black opacity-60 font-medium">{educationalLevels[2].promptExample.description}</p>
@@ -377,7 +377,7 @@ export default function EducationalScrollJourney() {
                       <span className="w-1.5 h-1.5 rounded-full bg-black opacity-30" />
                       <span className="text-[10px] font-bold text-black opacity-55 uppercase tracking-wider">PROMPT CHƯA TỐI ƯU</span>
                     </div>
-                    <div className="bg-white/80 backdrop-blur-sm border border-black/[0.05] rounded-xl p-3 text-xs text-black font-medium italic opacity-75">
+                    <div className="bg-white/40 backdrop-blur-sm border border-black/[0.06] rounded-xl p-3 text-xs text-black font-medium italic opacity-75">
                       “{educationalLevels[2].promptExample.badPrompt}”
                     </div>
                   </div>
@@ -387,13 +387,13 @@ export default function EducationalScrollJourney() {
                       <span className="w-1.5 h-1.5 rounded-full bg-black" />
                       <span className="text-[10px] font-bold text-black uppercase tracking-wider">PROMPT TIÊU CHUẨN</span>
                     </div>
-                    <div className="bg-white/90 backdrop-blur-sm border border-black/[0.08] rounded-xl p-3 text-xs text-black font-bold">
+                    <div className="bg-white/60 backdrop-blur-sm border border-black/[0.08] rounded-xl p-3 text-xs text-black font-bold">
                       “{educationalLevels[2].promptExample.goodPrompt}”
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white/80 backdrop-blur-sm border border-black/[0.05] rounded-xl p-4 text-[11px] text-black font-mono leading-relaxed max-h-36 overflow-y-auto">
+                <div className="bg-white/40 backdrop-blur-sm border border-black/[0.06] rounded-xl p-4 text-[11px] text-black font-mono leading-relaxed max-h-36 overflow-y-auto">
                   {educationalLevels[2].promptExample.simulatedResponse}
                 </div>
               </div>

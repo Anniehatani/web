@@ -12,7 +12,7 @@ interface BackgroundCrossedMarqueeProps {
 export default function BackgroundCrossedMarquee({
   text,
   className = "",
-  opacity = "0.06",
+  opacity = "0.18",
 }: BackgroundCrossedMarqueeProps) {
   const ref = useRef<HTMLDivElement>(null);
 
