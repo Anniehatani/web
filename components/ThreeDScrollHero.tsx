@@ -18,8 +18,8 @@ export default function ThreeDScrollHero() {
   useEffect(() => {
     let isCancelled = false;
 
-    // NẾU LÀ MÀN HÌNH MOBILE (< 1024px): Bỏ qua việc tải 240 ảnh 3D để tiết kiệm 100% dung lượng mạng & RAM
-    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+    // NẾU LÀ MÀN HÌNH MOBILE CHUẨN (< 768px): Bỏ qua việc tải 240 ảnh 3D để tiết kiệm 100% dung lượng mạng & RAM
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
       setIsPreloaded(true);
       return;
     }
@@ -213,12 +213,12 @@ export default function ThreeDScrollHero() {
 
   return (
     <>
-      {/* MOBILE HERO: Video tỷ lệ TV 16:9 sắc nét ở trên cùng, 0 tải 240 ảnh, 0 bẫy cuộn 350vh */}
-      <div className="block lg:hidden relative bg-black text-white pt-20 pb-12 px-5">
+      {/* MOBILE HERO: Nền trắng tinh tế, Video TV 16:9 ở trên cùng, 0 tải 240 ảnh, 0 bẫy cuộn 350vh */}
+      <div className="block md:hidden relative bg-white text-black pt-20 pb-12 px-5">
         <div className="max-w-lg mx-auto space-y-6">
           
           {/* VIDEO TV 16:9 NẰM Ở TRÊN CÙNG */}
-          <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-neutral-900">
+          <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-black/10 shadow-lg bg-neutral-100">
             <video
               src="/intro.mp4"
               autoPlay
@@ -233,7 +233,7 @@ export default function ThreeDScrollHero() {
             {/* Nút Bật/Tắt Tiếng Video */}
             <button
               onClick={() => setIsMuted(!isMuted)}
-              className="absolute bottom-3 right-3 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/30 text-white"
+              className="absolute bottom-3 right-3 w-9 h-9 flex items-center justify-center rounded-full bg-black/70 backdrop-blur-md border border-white/30 text-white"
               aria-label="Toggle sound"
             >
               <div className="flex items-end justify-center gap-[2.5px] h-3.5">
@@ -244,35 +244,35 @@ export default function ThreeDScrollHero() {
             </button>
           </div>
 
-          {/* NỘI DUNG CHÍNH CHỮ & TIÊU ĐỀ */}
+          {/* NỘI DUNG CHÍNH CHỮ & TIÊU ĐỀ (Nền trắng, chữ đen sắc nét) */}
           <div className="text-center space-y-3">
-            <span className="text-[10px] font-mono text-neutral-400 tracking-[0.3em] uppercase block">
+            <span className="text-[10px] font-mono text-black/40 tracking-[0.3em] uppercase block">
               // CHIẾN DỊCH SMART AI-LEARNER
             </span>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight">
-              Học tập <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-400">thông minh hơn</span> bằng AI
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black leading-tight">
+              Học tập <span className="text-transparent bg-clip-text bg-gradient-to-r from-black via-neutral-800 to-neutral-600">thông minh hơn</span> bằng AI
             </h1>
-            <p className="text-xs text-neutral-300 font-light leading-relaxed max-w-md mx-auto">
+            <p className="text-xs text-neutral-600 font-medium leading-relaxed max-w-md mx-auto">
               Một dự án của Nhóm Omni Artificial Intelligence (Sinh viên Đại học CMC). Cuộn xuống để bắt đầu hành trình học tập cá nhân hóa chuẩn Google.
             </p>
           </div>
 
-          {/* 3 THẺ NỘI DUNG TỔNG QUAN / LỢI ÍCH / PHÁT TRIỂN */}
+          {/* 3 THẺ NỘI DUNG TỔNG QUAN / LỢI ÍCH / PHÁT TRIỂN (Thẻ sáng viền nhẹ) */}
           <div className="space-y-3 pt-2">
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-1">
-              <span className="text-[9px] font-mono text-neutral-400 block">01 // TỔNG QUAN</span>
-              <h3 className="text-xs font-bold text-white">Công nghệ lõi định hình tương lai</h3>
-              <p className="text-[11px] text-neutral-300 leading-relaxed font-light">Sức mạnh trí tuệ nhân tạo được thiết kế riêng biệt giúp việc tiếp thu kiến thức trực quan và sinh động.</p>
+            <div className="bg-neutral-50 border border-black/10 rounded-2xl p-4 space-y-1">
+              <span className="text-[9px] font-mono text-black/40 block">01 // TỔNG QUAN</span>
+              <h3 className="text-xs font-bold text-black">Công nghệ lõi định hình tương lai</h3>
+              <p className="text-[11px] text-neutral-600 leading-relaxed font-medium">Sức mạnh trí tuệ nhân tạo được thiết kế riêng biệt giúp việc tiếp thu kiến thức trực quan và sinh động.</p>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-1">
-              <span className="text-[9px] font-mono text-neutral-400 block">02 // LỢI ÍCH</span>
-              <h3 className="text-xs font-bold text-white">Chủ động cá nhân hóa</h3>
-              <p className="text-[11px] text-neutral-300 leading-relaxed font-light">Tự động phân tích lộ trình học tập tối ưu theo sát tốc độ tiếp thu của từng cá nhân.</p>
+            <div className="bg-neutral-50 border border-black/10 rounded-2xl p-4 space-y-1">
+              <span className="text-[9px] font-mono text-black/40 block">02 // LỢI ÍCH</span>
+              <h3 className="text-xs font-bold text-black">Chủ động cá nhân hóa</h3>
+              <p className="text-[11px] text-neutral-600 leading-relaxed font-medium">Tự động phân tích lộ trình học tập tối ưu theo sát tốc độ tiếp thu của từng cá nhân.</p>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-1">
-              <span className="text-[9px] font-mono text-neutral-400 block">03 // PHÁT TRIỂN</span>
-              <h3 className="text-xs font-bold text-white">Nâng tầm tư duy phản biện</h3>
-              <p className="text-[11px] text-neutral-300 leading-relaxed font-light">AI gợi mở hướng giải quyết vấn đề và rèn luyện tư duy logic phản biện đa chiều.</p>
+            <div className="bg-neutral-50 border border-black/10 rounded-2xl p-4 space-y-1">
+              <span className="text-[9px] font-mono text-black/40 block">03 // PHÁT TRIỂN</span>
+              <h3 className="text-xs font-bold text-black">Nâng tầm tư duy phản biện</h3>
+              <p className="text-[11px] text-neutral-600 leading-relaxed font-medium">AI gợi mở hướng giải quyết vấn đề và rèn luyện tư duy logic phản biện đa chiều.</p>
             </div>
           </div>
 
@@ -280,7 +280,7 @@ export default function ThreeDScrollHero() {
       </div>
 
       {/* DESKTOP HERO: Giữ nguyên 100% toàn bộ trải nghiệm Canvas 3D 240 ảnh + video parallax + spiral text */}
-      <div ref={containerRef} className="hidden lg:block relative h-[350vh] bg-white">
+      <div ref={containerRef} className="hidden md:block relative h-[350vh] bg-white">
         {/* KHÓA TRỤC SCREEN */}
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex items-center justify-center z-10 bg-white google-grid">
           
