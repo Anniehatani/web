@@ -114,15 +114,15 @@ export default function EducationalScrollJourney() {
   const cardRotate2 = useTransform(smoothProgress, [0.22, 0.36, 0.62, 0.72], [6, 0, 0, -6]);
   const cardRotate3 = useTransform(smoothProgress, [0.55, 0.68, 1], [6, 0, 0]);
 
-  // 2. Chữ nền Parallax đồng bộ hoàn hảo từng Stage (Opacity 0.28 rõ nét đằng sau thẻ kính)
+  // 2. Chữ nền Parallax đồng bộ hoàn hảo từng Stage (Opacity 0.06 nhẹ nhàng như cũ)
   const bgTextX1 = useTransform(smoothProgress, [0, 0.38], ["0%", "-30%"]);
-  const bgOpacity1 = useTransform(smoothProgress, [0, 0.28, 0.35], [0.28, 0.28, 0]);
+  const bgOpacity1 = useTransform(smoothProgress, [0, 0.28, 0.35], [0.06, 0.06, 0]);
 
   const bgTextX2 = useTransform(smoothProgress, [0.22, 0.72], ["15%", "-15%"]);
-  const bgOpacity2 = useTransform(smoothProgress, [0.25, 0.35, 0.62, 0.68], [0, 0.28, 0.28, 0]);
+  const bgOpacity2 = useTransform(smoothProgress, [0.25, 0.35, 0.62, 0.68], [0, 0.06, 0.06, 0]);
 
   const bgTextX3 = useTransform(smoothProgress, [0.55, 1], ["20%", "-10%"]);
-  const bgOpacity3 = useTransform(smoothProgress, [0.58, 0.68, 1], [0, 0.28, 0.28]);
+  const bgOpacity3 = useTransform(smoothProgress, [0.58, 0.68, 1], [0, 0.06, 0.06]);
 
   // Hàm sinh dải chữ nối đuôi nhau liên tục
   const renderLoopingText = (text: string) => {

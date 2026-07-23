@@ -15,7 +15,7 @@ export default function BackgroundMarquee({
   text,
   speed = 1000,
   className = "",
-  opacity = "0.15",
+  opacity = "0.04",
   lines = 7, // Giảm từ 11 xuống 7 dòng đủ phủ màn hình mà tiết kiệm DOM
 }: BackgroundMarqueeProps) {
   const ref = useRef<HTMLDivElement>(null);

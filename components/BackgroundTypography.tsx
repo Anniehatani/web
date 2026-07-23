@@ -18,7 +18,7 @@ export default function BackgroundTypography({
   speed = 200,
   speedY = 1000,
   className = "",
-  opacity = "0.18",
+  opacity = "0.06",
 }: BackgroundTypographyProps) {
   const ref = useRef<HTMLDivElement>(null);
 
