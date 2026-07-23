@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 
 // Khai báo cấu trúc dữ liệu chuẩn học thuật
 interface EducationalLevel {
@@ -92,6 +92,8 @@ export default function EducationalScrollJourney() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeMobileTab, setActiveMobileTab] = useState(0);
 
+  const mobileTabLabels = ["THCS", "THPT", "Sinh Viên"];
+
   // Theo dõi tiến trình cuộn dọc tổng thể (0 đến 1)
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -142,7 +144,7 @@ export default function EducationalScrollJourney() {
 
   return (
     <>
-      {/* MOBILE DISPLAY (Giao diện phẳng mượt cho điện thoại, tuyệt đối không bị kẹt cuộn) */}
+      {/* MOBILE DISPLAY (Giao diện phẳng mượt cho điện thoại với hiệu ứng chuyển Stage animated) */}
       <div className="block lg:hidden bg-white py-10 px-4">
         <div className="max-w-xl mx-auto space-y-6">
           <div className="text-center space-y-1.5">
@@ -152,77 +154,94 @@ export default function EducationalScrollJourney() {
             <h2 className="text-2xl font-bold text-black tracking-tight">Hành Trình Học Tập AI</h2>
           </div>
 
-          {/* Thanh chuyển Stage nhanh trên Mobile */}
-          <div className="flex items-center gap-1.5 p-1 bg-black/5 rounded-2xl">
-            {educationalLevels.map((level, idx) => (
-              <button
-                key={level.id}
-                onClick={() => setActiveMobileTab(idx)}
-                className={`flex-1 py-2.5 px-2 rounded-xl text-xs font-bold transition-all text-center ${
-                  activeMobileTab === idx
-                    ? "bg-black text-white shadow-md"
-                    : "text-black/60 hover:text-black"
-                }`}
-              >
-                Stage 0{idx + 1}
-              </button>
-            ))}
+          {/* Thanh chuyển Stage nhanh trên Mobile (THCS - THPT - Sinh Viên) */}
+          <div className="flex items-center gap-1.5 p-1.5 bg-black/5 rounded-2xl relative">
+            {educationalLevels.map((level, idx) => {
+              const isActive = activeMobileTab === idx;
+              return (
+                <button
+                  key={level.id}
+                  onClick={() => setActiveMobileTab(idx)}
+                  className={`relative flex-1 py-2.5 px-2 rounded-xl text-xs font-bold transition-colors duration-300 text-center ${
+                    isActive ? "text-white" : "text-black/60 hover:text-black"
+                  }`}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeMobileTabBg"
+                      className="absolute inset-0 bg-black rounded-xl z-0"
+                      transition={{ type: "spring", bounce: 0.18, duration: 0.4 }}
+                    />
+                  )}
+                  <span className="relative z-10">{mobileTabLabels[idx]}</span>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Thẻ thông tin Stage hiển thị tự nhiên (không bị giới hạn chiều cao) */}
-          <div className="bg-white border border-black/10 rounded-2xl p-5 space-y-5 shadow-sm">
-            <div className="space-y-3">
-              <span className="px-3 py-1 bg-black text-white rounded-full text-[9px] font-bold tracking-widest w-max block">
-                {educationalLevels[activeMobileTab].badge}
-              </span>
-              <h3 className="text-xl font-bold text-black tracking-tight">
-                {educationalLevels[activeMobileTab].title}
-              </h3>
-              <p className="text-xs font-bold text-black/80 uppercase tracking-tight">
-                {educationalLevels[activeMobileTab].subtitle}
-              </p>
-              <p className="text-xs text-black/90 leading-relaxed font-medium">
-                {educationalLevels[activeMobileTab].desc}
-              </p>
-            </div>
-
-            <div className="space-y-2.5 pt-4 border-t border-black/5">
-              {educationalLevels[activeMobileTab].textInstructions.map((inst, i) => (
-                <div key={i} className="flex items-start gap-2.5 text-xs text-black font-medium">
-                  <span className="font-bold text-black">•</span>
-                  <span className="leading-relaxed">{inst}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Ví dụ Prompt */}
-            <div className="bg-black/[0.02] border border-black/5 rounded-xl p-4 space-y-4">
-              <div>
-                <h4 className="text-xs font-bold text-black">{educationalLevels[activeMobileTab].promptExample.title}</h4>
-                <p className="text-[10px] text-black/60 font-medium">{educationalLevels[activeMobileTab].promptExample.description}</p>
-              </div>
-
+          {/* Thẻ thông tin Stage với Hiệu ứng Chuyển cảnh (AnimatePresence) */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeMobileTab}
+              initial={{ opacity: 0, y: 15, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -15, scale: 0.98 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white border border-black/10 rounded-2xl p-5 space-y-5 shadow-sm"
+            >
               <div className="space-y-3">
-                <div className="space-y-1">
-                  <span className="text-[9px] font-bold text-black/50 uppercase tracking-wider block">PROMPT CHƯA TỐI ƯU</span>
-                  <div className="bg-white border border-black/5 rounded-lg p-2.5 text-xs italic text-black/70">
-                    “{educationalLevels[activeMobileTab].promptExample.badPrompt}”
+                <span className="px-3 py-1 bg-black text-white rounded-full text-[9px] font-bold tracking-widest w-max block">
+                  {educationalLevels[activeMobileTab].badge}
+                </span>
+                <h3 className="text-xl font-bold text-black tracking-tight">
+                  {educationalLevels[activeMobileTab].title}
+                </h3>
+                <p className="text-xs font-bold text-black/80 uppercase tracking-tight">
+                  {educationalLevels[activeMobileTab].subtitle}
+                </p>
+                <p className="text-xs text-black/90 leading-relaxed font-medium">
+                  {educationalLevels[activeMobileTab].desc}
+                </p>
+              </div>
+
+              <div className="space-y-2.5 pt-4 border-t border-black/5">
+                {educationalLevels[activeMobileTab].textInstructions.map((inst, i) => (
+                  <div key={i} className="flex items-start gap-2.5 text-xs text-black font-medium">
+                    <span className="font-bold text-black">•</span>
+                    <span className="leading-relaxed">{inst}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Ví dụ Prompt */}
+              <div className="bg-black/[0.02] border border-black/5 rounded-xl p-4 space-y-4">
+                <div>
+                  <h4 className="text-xs font-bold text-black">{educationalLevels[activeMobileTab].promptExample.title}</h4>
+                  <p className="text-[10px] text-black/60 font-medium">{educationalLevels[activeMobileTab].promptExample.description}</p>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <span className="text-[9px] font-bold text-black/50 uppercase tracking-wider block">PROMPT CHƯA TỐI ƯU</span>
+                    <div className="bg-white border border-black/5 rounded-lg p-2.5 text-xs italic text-black/70">
+                      “{educationalLevels[activeMobileTab].promptExample.badPrompt}”
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <span className="text-[9px] font-bold text-black uppercase tracking-wider block">PROMPT TIÊU CHUẨN</span>
+                    <div className="bg-white border border-black/10 rounded-lg p-2.5 text-xs font-bold text-black">
+                      “{educationalLevels[activeMobileTab].promptExample.goodPrompt}”
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <span className="text-[9px] font-bold text-black uppercase tracking-wider block">PROMPT TIÊU CHUẨN</span>
-                  <div className="bg-white border border-black/10 rounded-lg p-2.5 text-xs font-bold text-black">
-                    “{educationalLevels[activeMobileTab].promptExample.goodPrompt}”
-                  </div>
+                <div className="bg-white border border-black/5 rounded-lg p-3 text-[11px] font-mono leading-relaxed text-black/90">
+                  {educationalLevels[activeMobileTab].promptExample.simulatedResponse}
                 </div>
               </div>
-
-              <div className="bg-white border border-black/5 rounded-lg p-3 text-[11px] font-mono leading-relaxed text-black/90">
-                {educationalLevels[activeMobileTab].promptExample.simulatedResponse}
-              </div>
-            </div>
-          </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 
