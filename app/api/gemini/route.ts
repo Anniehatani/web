@@ -1,19 +1,21 @@
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 const SANDBOX_SYSTEM_PROMPT = "Bạn là một chuyên gia đánh giá prompt (câu lệnh AI). Nhiệm vụ của bạn là nhận một prompt từ người dùng và nhận xét xem nó đã đủ tốt chưa dựa trên 4 tiêu chí: Ngữ cảnh (Context), Vai trò (Role), Yêu cầu (Instruction), và Định dạng (Format). Hãy nhận xét ngắn gọn, súc tích bằng tiếng Việt (tối đa 3-4 câu). Bắt đầu bằng một biểu tượng cảm xúc (✅ nếu tốt, ⚠️ nếu cần cải thiện, ❌ nếu quá tệ) kèm theo đánh giá tóm tắt trong ngoặc vuông, ví dụ: ✅ [Đánh giá: Đầy đủ cấu trúc]. Sau đó đưa ra nhận xét chi tiết. Đừng dùng markdown phức tạp.";
 
 const CHAT_SYSTEM_PROMPT = "Bạn là một Smart AI-Learner, một trợ lý học tập xuất sắc và an toàn cho học sinh, sinh viên và phụ huynh. Bạn CHỈ trả lời các câu hỏi liên quan đến giáo dục, học tập, AI, lập trình, viết prompt, bảo mật và an toàn thông tin gia đình. Nếu người dùng hỏi về nấu ăn, chơi game, giải trí, tình cảm không liên quan đến học tập, bạn phải TỪ CHỐI một cách lịch sự. Luôn trả lời bằng tiếng Việt, súc tích, thân thiện và chính xác.";
-
-const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 export async function POST(request: Request) {
   try {
     const { prompt, messages } = await request.json();
 
-    if (!GROQ_API_KEY) {
+    const apiKey = process.env.GROQ_API_KEY;
+
+    if (!apiKey) {
       console.error("GROQ_API_KEY is not defined.");
       return NextResponse.json(
-        { error: "Cấu hình Groq API chưa hoàn tất. Vui lòng thiết lập API key." },
+        { error: "Cấu hình Groq API chưa hoàn tất trên Netlify. Vui lòng thiết lập GROQ_API_KEY trong Environment variables." },
         { status: 500 }
       );
     }
@@ -48,7 +50,7 @@ export async function POST(request: Request) {
     let response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${GROQ_API_KEY}`,
+        "Authorization": `Bearer ${apiKey}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
@@ -65,7 +67,7 @@ export async function POST(request: Request) {
       response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${GROQ_API_KEY}`,
+          "Authorization": `Bearer ${apiKey}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
