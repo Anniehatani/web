@@ -377,7 +377,9 @@ export default function ThreeDScrollHero() {
                       loop
                       muted={isMuted}
                       playsInline
-                      className="absolute inset-0 w-full h-full object-cover"
+                      controlsList="nodownload"
+                      data-idm-members="disabled"
+                      className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                     />
                     
                     <button
