@@ -220,11 +220,11 @@ export default function Navbar({ onAdminToggle, isAdminOpen }: NavbarProps = {})
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-[110%] left-3 right-3 bg-white/95 backdrop-blur-3xl shadow-2xl border border-white/60 rounded-3xl p-3 flex flex-col gap-1.5 md:hidden"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute top-[110%] left-3 right-3 bg-white/95 backdrop-blur-md shadow-xl border border-neutral-200/80 rounded-3xl p-3 flex flex-col gap-1.5 md:hidden z-50"
           >
             {navItems.map((item) => (
               <button
