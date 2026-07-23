@@ -42,7 +42,7 @@ export default function BackgroundMarquee({
   return (
     <div 
       ref={ref} 
-      className="absolute inset-0 overflow-hidden pointer-events-none z-0 flex flex-col items-center justify-center select-none"
+      className="hidden md:flex absolute inset-0 overflow-hidden pointer-events-none z-0 flex-col items-center justify-center select-none"
       aria-hidden="true"
     >
       {[...Array(lines)].map((_, i) => (

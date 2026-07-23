@@ -179,8 +179,9 @@ export default function ThreeDScrollHero() {
 
     let resizeRafId: number;
     const resizeCanvas = () => {
-      // Giới hạn DPR ở mức tối đa 1.5x giúp mượt gấp 2-3 lần trên màn hình Retina / 4K
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      // Giới hạn DPR: 1.0x trên Mobile để mượt 100%, 1.5x trên Desktop
+      const isMobile = window.innerWidth < 768;
+      const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       canvas.style.width = `${window.innerWidth}px`;

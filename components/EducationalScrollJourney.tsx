@@ -170,7 +170,7 @@ export default function EducationalScrollJourney() {
                     <motion.div
                       layoutId="activeMobileTabBg"
                       className="absolute inset-0 bg-black rounded-xl z-0"
-                      transition={{ type: "spring", bounce: 0.18, duration: 0.4 }}
+                      transition={{ duration: 0.2 }}
                     />
                   )}
                   <span className="relative z-10">{mobileTabLabels[idx]}</span>
@@ -179,14 +179,14 @@ export default function EducationalScrollJourney() {
             })}
           </div>
 
-          {/* Thẻ thông tin Stage với Hiệu ứng Chuyển cảnh (AnimatePresence) */}
+          {/* Thẻ thông tin Stage siêu nhẹ cho Mobile */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeMobileTab}
-              initial={{ opacity: 0, y: 15, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -15, scale: 0.98 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
               className="bg-white border border-black/10 rounded-2xl p-5 space-y-5 shadow-sm"
             >
               <div className="space-y-3">

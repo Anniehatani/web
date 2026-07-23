@@ -59,7 +59,7 @@ export default function BackgroundTypography({
   return (
     <div
       ref={ref}
-      className={`absolute inset-0 overflow-hidden pointer-events-none z-0 flex items-center justify-center select-none ${className}`}
+      className={`hidden md:flex absolute inset-0 overflow-hidden pointer-events-none z-0 items-center justify-center select-none ${className}`}
       aria-hidden="true"
     >
       <motion.div

@@ -40,7 +40,7 @@ export default function BackgroundCrossedMarquee({
   return (
     <div
       ref={ref}
-      className={`absolute inset-0 overflow-hidden pointer-events-none z-0 select-none ${className}`}
+      className={`hidden md:block absolute inset-0 overflow-hidden pointer-events-none z-0 select-none ${className}`}
       aria-hidden="true"
     >
       <svg
