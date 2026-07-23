@@ -213,55 +213,69 @@ export default function ThreeDScrollHero() {
 
   return (
     <>
-      {/* MOBILE HERO: Siêu nhẹ, 0 tải 240 ảnh, load tức thì 0ms, không bẫy cuộn 350vh */}
-      <div className="block lg:hidden relative bg-black text-white py-16 px-6 overflow-hidden">
-        {/* Background video xem trước cực nhẹ cho mobile */}
-        <div className="absolute inset-0 opacity-30">
-          <video
-            src="/intro.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            controlsList="nodownload"
-            data-idm-members="disabled"
-            className="w-full h-full object-cover pointer-events-none"
-          />
-        </div>
+      {/* MOBILE HERO: Video tỷ lệ TV 16:9 sắc nét ở trên cùng, 0 tải 240 ảnh, 0 bẫy cuộn 350vh */}
+      <div className="block lg:hidden relative bg-black text-white pt-20 pb-12 px-5">
+        <div className="max-w-lg mx-auto space-y-6">
+          
+          {/* VIDEO TV 16:9 NẰM Ở TRÊN CÙNG */}
+          <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-neutral-900">
+            <video
+              src="/intro.mp4"
+              autoPlay
+              loop
+              muted={isMuted}
+              playsInline
+              controlsList="nodownload"
+              data-idm-members="disabled"
+              className="w-full h-full object-cover"
+            />
+            
+            {/* Nút Bật/Tắt Tiếng Video */}
+            <button
+              onClick={() => setIsMuted(!isMuted)}
+              className="absolute bottom-3 right-3 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/30 text-white"
+              aria-label="Toggle sound"
+            >
+              <div className="flex items-end justify-center gap-[2.5px] h-3.5">
+                <motion.div animate={{ height: isMuted ? 3 : [3, 10, 3] }} transition={{ repeat: Infinity, duration: 0.8 }} className={`w-[2px] rounded-full ${isMuted ? 'bg-white/50' : 'bg-white'}`} />
+                <motion.div animate={{ height: isMuted ? 3 : [3, 14, 3] }} transition={{ repeat: Infinity, duration: 0.9, delay: 0.1 }} className={`w-[2px] rounded-full ${isMuted ? 'bg-white/50' : 'bg-white'}`} />
+                <motion.div animate={{ height: isMuted ? 3 : [3, 7, 3] }} transition={{ repeat: Infinity, duration: 0.7, delay: 0.2 }} className={`w-[2px] rounded-full ${isMuted ? 'bg-white/50' : 'bg-white'}`} />
+              </div>
+            </button>
+          </div>
 
-        <div className="relative z-10 max-w-lg mx-auto space-y-6 text-center">
-          <span className="text-[10px] font-mono text-neutral-300 tracking-[0.3em] uppercase block">
-            // Chiến dịch Smart AI-Learner
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
-            Học tập <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-400">
-              thông minh hơn
+          {/* NỘI DUNG CHÍNH CHỮ & TIÊU ĐỀ */}
+          <div className="text-center space-y-3">
+            <span className="text-[10px] font-mono text-neutral-400 tracking-[0.3em] uppercase block">
+              // CHIẾN DỊCH SMART AI-LEARNER
             </span>
-            <br />
-            bằng AI
-          </h1>
-          <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed max-w-md mx-auto">
-            Một dự án của Nhóm Omni Artificial Intelligence (Sinh viên Đại học CMC). Cuộn xuống để bắt đầu hành trình học tập cá nhân hóa chuẩn Google.
-          </p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight">
+              Học tập <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-400">thông minh hơn</span> bằng AI
+            </h1>
+            <p className="text-xs text-neutral-300 font-light leading-relaxed max-w-md mx-auto">
+              Một dự án của Nhóm Omni Artificial Intelligence (Sinh viên Đại học CMC). Cuộn xuống để bắt đầu hành trình học tập cá nhân hóa chuẩn Google.
+            </p>
+          </div>
 
-          <div className="pt-4 grid grid-cols-1 gap-3 text-left">
-            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 space-y-1">
+          {/* 3 THẺ NỘI DUNG TỔNG QUAN / LỢI ÍCH / PHÁT TRIỂN */}
+          <div className="space-y-3 pt-2">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-1">
               <span className="text-[9px] font-mono text-neutral-400 block">01 // TỔNG QUAN</span>
               <h3 className="text-xs font-bold text-white">Công nghệ lõi định hình tương lai</h3>
               <p className="text-[11px] text-neutral-300 leading-relaxed font-light">Sức mạnh trí tuệ nhân tạo được thiết kế riêng biệt giúp việc tiếp thu kiến thức trực quan và sinh động.</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 space-y-1">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-1">
               <span className="text-[9px] font-mono text-neutral-400 block">02 // LỢI ÍCH</span>
               <h3 className="text-xs font-bold text-white">Chủ động cá nhân hóa</h3>
               <p className="text-[11px] text-neutral-300 leading-relaxed font-light">Tự động phân tích lộ trình học tập tối ưu theo sát tốc độ tiếp thu của từng cá nhân.</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 space-y-1">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-1">
               <span className="text-[9px] font-mono text-neutral-400 block">03 // PHÁT TRIỂN</span>
               <h3 className="text-xs font-bold text-white">Nâng tầm tư duy phản biện</h3>
               <p className="text-[11px] text-neutral-300 leading-relaxed font-light">AI gợi mở hướng giải quyết vấn đề và rèn luyện tư duy logic phản biện đa chiều.</p>
             </div>
           </div>
+
         </div>
       </div>
 
