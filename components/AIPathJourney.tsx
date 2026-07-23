@@ -62,8 +62,8 @@ export default function AIPathJourney() {
       </div>
 
       <div className="relative max-w-6xl mx-auto w-full min-h-[1200px] md:min-h-[1600px]">
-        {/* Nền cực quang uốn lượn */}
-        <div className="absolute inset-0 flex justify-center pointer-events-none z-0 overflow-visible">
+        {/* Nền cực quang uốn lượn (Ẩn trên Mobile để tiết kiệm GPU) */}
+        <div className="hidden md:flex absolute inset-0 justify-center pointer-events-none z-0 overflow-visible">
           <svg
             viewBox="0 0 200 1000"
             fill="none"

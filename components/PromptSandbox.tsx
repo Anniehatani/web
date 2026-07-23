@@ -9,7 +9,7 @@ export default function PromptSandbox() {
   const [aiResponse, setAiResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Scroll Progress cho Parallax tổng thể
+  // Scroll Progress cho Parallax tổng thể trên PC
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -26,7 +26,7 @@ export default function PromptSandbox() {
   const leftParallaxY = useTransform(smoothProgress, [0, 1], [30, -30]);
   const rightParallaxY = useTransform(smoothProgress, [0, 1], [60, -60]);
 
-  // Mouse Parallax cho cột phải
+  // Mouse Parallax cho cột phải trên PC
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   
@@ -90,143 +90,223 @@ export default function PromptSandbox() {
   };
 
   return (
-    <section ref={containerRef} id="prompts" className="py-32 px-6 relative overflow-hidden google-grid border-t border-neutral-100">
-      
-      {/* Scroll-linked background shape */}
-      <motion.div 
-        className="absolute top-[-20%] left-[-10%] w-[120%] h-[140%] pointer-events-none opacity-[0.15]"
-        style={{
-          background: "radial-gradient(circle at 50% 50%, rgba(200,200,200,0.5) 0%, transparent 60%)",
-          y: bgY
-        }}
-      />
-
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
-        
-        {/* CỘT TRÁI: 4 THẺ BENTO KHỐI GẬP MỞ 3D */}
-        <motion.div style={{ y: leftParallaxY }} className="lg:col-span-5 space-y-12">
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.15 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-4"
-          >
+    <>
+      {/* MOBILE PROMPT SKILL (Giao diện phẳng siêu nhẹ cho điện thoại: 0 xoay 3D, 0 parallax, cực kỳ mượt) */}
+      <div id="prompts-mobile" className="block md:hidden bg-white py-12 px-5 border-t border-neutral-100">
+        <div className="max-w-xl mx-auto space-y-6">
+          <div className="text-center space-y-1.5">
             <span className="text-[10px] font-mono text-neutral-400 tracking-[0.3em] uppercase block">
               // SKILL_SET 02
             </span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-neutral-900 tracking-tight leading-[1.1]">
-              Kỹ Thuật <br />
-              <span className="font-semibold text-neutral-700">Prompt Chuyên Nghiệp</span>
+            <h2 className="text-2xl font-bold text-neutral-900 tracking-tight leading-tight">
+              Kỹ Thuật <span className="font-semibold text-neutral-700">Prompt Chuyên Nghiệp</span>
             </h2>
-          </motion.div>
+          </div>
 
-          {/* Grid bento bung tỏa 3D khi cuộn chuột chạm tới */}
-          <div className="grid grid-cols-2 gap-4 perspective-[1200px]">
+          {/* 4 Thẻ Bento phẳng mượt cho Mobile */}
+          <div className="grid grid-cols-2 gap-3">
             {bentoCards.map((card, idx) => (
-              <motion.div
+              <div
                 key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.15 }}
-                transition={{ 
-                  duration: 1.2, 
-                  delay: idx * 0.15, 
-                  ease: [0.16, 1, 0.3, 1] 
-                }}
-                whileHover={{ y: -4, scale: 1.02 }}
                 onClick={() => setCustomPrompt(card.preset)}
-                className="bg-white/80 backdrop-blur-sm border border-neutral-200/60 rounded-[1.5rem] p-6 cursor-pointer hover:border-neutral-400 shadow-[0_12px_24px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] transition-all text-left group"
-                style={{ transformStyle: "preserve-3d" }}
+                className="bg-white border border-neutral-200/80 rounded-2xl p-4 cursor-pointer hover:border-neutral-400 shadow-sm active:scale-95 transition-all text-left"
               >
-                <div style={{ transform: "translateZ(20px)" }}>
-                  <span className="text-xs font-mono text-neutral-400 block mb-3 group-hover:text-neutral-900 transition-colors">{card.num}</span>
-                  <h4 className="text-base font-semibold text-neutral-800 mb-2">{card.title}</h4>
-                  <p className="text-[13px] text-neutral-500 font-light leading-relaxed">{card.desc}</p>
-                </div>
-              </motion.div>
+                <span className="text-xs font-mono text-neutral-400 block mb-2">{card.num}</span>
+                <h4 className="text-xs font-bold text-neutral-800 mb-1">{card.title}</h4>
+                <p className="text-[11px] text-neutral-500 font-light leading-relaxed">{card.desc}</p>
+              </div>
             ))}
           </div>
-        </motion.div>
 
-        {/* CỘT PHẢI: Ô SANDBOX TRƯỢT XOAY CHIỀU SÂU (Slide Perspective Panel) */}
-        <motion.div 
-          style={{ y: rightParallaxY }}
-          className="lg:col-span-7 perspective-[1500px]"
-        >
-          <motion.div 
-            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.15 }}
-            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-white/90 backdrop-blur-md border border-neutral-200/80 rounded-[2.5rem] p-8 md:p-12 shadow-[0_30px_70px_rgba(0,0,0,0.12)] hover:shadow-[0_30px_80px_rgba(0,0,0,0.16)] transition-all relative"
-          >
-            {/* Lớp phủ highlight để tạo độ bóng mượt cho thẻ */}
-            <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-white/80 via-white/20 to-transparent pointer-events-none" style={{ transform: "translateZ(1px)" }} />
-            
-            <div style={{ transform: "translateZ(30px)" }}>
-              {/* Preset nhanh */}
-              <div className="mb-8">
-                <span className="text-[11px] font-mono text-neutral-400 tracking-widest block mb-3 uppercase">Chọn nhanh mẫu so sánh:</span>
-                <div className="flex flex-col gap-3">
-                  {promptComparisons.map((item) => (
-                    <motion.button
-                      key={item.id}
-                      whileHover={{ x: 5 }}
-                      onClick={() => setCustomPrompt(item.good)}
-                      className="text-left text-sm bg-neutral-50/50 hover:bg-neutral-100 p-4 rounded-2xl border border-neutral-200/60 hover:border-neutral-300 transition-colors flex justify-between items-center group"
-                    >
-                      <span className="text-neutral-700 truncate max-w-[90%] font-medium">{item.category}: {item.good}</span>
-                      <span className="text-neutral-400 group-hover:text-neutral-900 transition-colors">&rarr;</span>
-                    </motion.button>
-                  ))}
-                </div>
+          {/* Khung Sandbox phẳng nhẹ cho Mobile */}
+          <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-5 space-y-5">
+            <div>
+              <span className="text-[10px] font-mono text-neutral-400 tracking-widest block mb-2.5 uppercase">Chọn mẫu so sánh nhanh:</span>
+              <div className="flex flex-col gap-2">
+                {promptComparisons.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setCustomPrompt(item.good)}
+                    className="text-left text-xs bg-white hover:bg-neutral-100 p-3 rounded-xl border border-neutral-200 transition-colors flex justify-between items-center active:scale-98"
+                  >
+                    <span className="text-neutral-700 truncate max-w-[90%] font-medium">{item.category}: {item.good}</span>
+                    <span className="text-neutral-400">&rarr;</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <form onSubmit={handleTestPrompt} className="space-y-4">
+              <div>
+                <label className="text-xs font-semibold text-neutral-800 block mb-1.5">Thử nghiệm câu lệnh của bạn:</label>
+                <textarea
+                  value={customPrompt}
+                  onChange={(e) => setCustomPrompt(e.target.value)}
+                  placeholder="Nhập câu lệnh vào đây hoặc chọn mẫu bên trên..."
+                  rows={4}
+                  className="w-full bg-white border border-neutral-200 rounded-xl p-3.5 text-xs text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-neutral-900 transition-all resize-none shadow-sm font-sans"
+                />
               </div>
 
-              <form onSubmit={handleTestPrompt} className="space-y-6">
-                <div>
-                  <label className="text-sm font-semibold text-neutral-800 block mb-2">Thử nghiệm câu lệnh của bạn:</label>
-                  <textarea
-                    value={customPrompt}
-                    onChange={(e) => setCustomPrompt(e.target.value)}
-                    placeholder="Nhập câu lệnh vào đây hoặc chọn thẻ gợi ý bên trên..."
-                    rows={4}
-                    className="w-full bg-white border border-neutral-200 rounded-2xl p-5 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 transition-all resize-none font-sans shadow-sm"
-                  />
-                </div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-neutral-950 hover:bg-black text-white py-3.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all shadow-md active:scale-95"
+              >
+                {isLoading ? "Đang phân tích cấu trúc..." : "Kiểm tra chất lượng Prompt"}
+              </button>
+            </form>
 
-                <motion.button
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-neutral-950 hover:bg-black text-white py-4 rounded-2xl font-bold text-sm tracking-wider uppercase transition-all shadow-lg shadow-black/10"
-                >
-                  {isLoading ? "Đang phân tích cấu trúc..." : "Kiểm tra chất lượng Prompt"}
-                </motion.button>
-              </form>
+            {aiResponse && (
+              <div className="mt-4 p-4 bg-white rounded-xl border border-neutral-200">
+                <p className="text-xs text-neutral-700 leading-relaxed whitespace-pre-line font-sans">
+                  {aiResponse}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
-              {aiResponse && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="mt-8 p-5 bg-neutral-50 rounded-2xl border border-neutral-200"
+      {/* DESKTOP PROMPT SKILL (Giữ nguyên 100% toàn bộ hiệu ứng 3D tilt + perspective + parallax scroll) */}
+      <section ref={containerRef} id="prompts" className="hidden md:block py-32 px-6 relative overflow-hidden google-grid border-t border-neutral-100">
+        
+        {/* Scroll-linked background shape */}
+        <motion.div 
+          className="absolute top-[-20%] left-[-10%] w-[120%] h-[140%] pointer-events-none opacity-[0.15]"
+          style={{
+            background: "radial-gradient(circle at 50% 50%, rgba(200,200,200,0.5) 0%, transparent 60%)",
+            y: bgY
+          }}
+        />
+
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
+          
+          {/* CỘT TRÁI: 4 THẺ BENTO KHỐI GẬP MỞ 3D */}
+          <motion.div style={{ y: leftParallaxY }} className="lg:col-span-5 space-y-12">
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-4"
+            >
+              <span className="text-[10px] font-mono text-neutral-400 tracking-[0.3em] uppercase block">
+                // SKILL_SET 02
+              </span>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extralight text-neutral-900 tracking-tight leading-[1.1]">
+                Kỹ Thuật <br />
+                <span className="font-semibold text-neutral-700">Prompt Chuyên Nghiệp</span>
+              </h2>
+            </motion.div>
+
+            {/* Grid bento bung tỏa 3D khi cuộn chuột chạm tới */}
+            <div className="grid grid-cols-2 gap-4 perspective-[1200px]">
+              {bentoCards.map((card, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.15 }}
+                  transition={{ 
+                    duration: 1.2, 
+                    delay: idx * 0.15, 
+                    ease: [0.16, 1, 0.3, 1] 
+                  }}
+                  whileHover={{ y: -4, scale: 1.02 }}
+                  onClick={() => setCustomPrompt(card.preset)}
+                  className="bg-white/80 backdrop-blur-sm border border-neutral-200/60 rounded-[1.5rem] p-6 cursor-pointer hover:border-neutral-400 shadow-[0_12px_24px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] transition-all text-left group"
+                  style={{ transformStyle: "preserve-3d" }}
                 >
-                  <p className="text-sm text-neutral-700 font-sans leading-relaxed whitespace-pre-line">
-                    {aiResponse}
-                  </p>
+                  <div style={{ transform: "translateZ(20px)" }}>
+                    <span className="text-xs font-mono text-neutral-400 block mb-3 group-hover:text-neutral-900 transition-colors">{card.num}</span>
+                    <h4 className="text-base font-semibold text-neutral-800 mb-2">{card.title}</h4>
+                    <p className="text-[13px] text-neutral-500 font-light leading-relaxed">{card.desc}</p>
+                  </div>
                 </motion.div>
-              )}
+              ))}
             </div>
           </motion.div>
-        </motion.div>
 
-      </div>
-    </section>
+          {/* CỘT PHẢI: Ô SANDBOX TRƯỢT XOAY CHIỀU SÂU (Slide Perspective Panel) */}
+          <motion.div 
+            style={{ y: rightParallaxY }}
+            className="lg:col-span-7 perspective-[1500px]"
+          >
+            <motion.div 
+              style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white/90 backdrop-blur-md border border-neutral-200/80 rounded-[2.5rem] p-8 md:p-12 shadow-[0_30px_70px_rgba(0,0,0,0.12)] hover:shadow-[0_30px_80px_rgba(0,0,0,0.16)] transition-all relative"
+            >
+              {/* Lớp phủ highlight để tạo độ bóng mượt cho thẻ */}
+              <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-white/80 via-white/20 to-transparent pointer-events-none" style={{ transform: "translateZ(1px)" }} />
+              
+              <div style={{ transform: "translateZ(30px)" }}>
+                {/* Preset nhanh */}
+                <div className="mb-8">
+                  <span className="text-[11px] font-mono text-neutral-400 tracking-widest block mb-3 uppercase">Chọn nhanh mẫu so sánh:</span>
+                  <div className="flex flex-col gap-3">
+                    {promptComparisons.map((item) => (
+                      <motion.button
+                        key={item.id}
+                        whileHover={{ x: 5 }}
+                        onClick={() => setCustomPrompt(item.good)}
+                        className="text-left text-sm bg-neutral-50/50 hover:bg-neutral-100 p-4 rounded-2xl border border-neutral-200/60 hover:border-neutral-300 transition-colors flex justify-between items-center group"
+                      >
+                        <span className="text-neutral-700 truncate max-w-[90%] font-medium">{item.category}: {item.good}</span>
+                        <span className="text-neutral-400 group-hover:text-neutral-900 transition-colors">&rarr;</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                <form onSubmit={handleTestPrompt} className="space-y-6">
+                  <div>
+                    <label className="text-sm font-semibold text-neutral-800 block mb-2">Thử nghiệm câu lệnh của bạn:</label>
+                    <textarea
+                      value={customPrompt}
+                      onChange={(e) => setCustomPrompt(e.target.value)}
+                      placeholder="Nhập câu lệnh vào đây hoặc chọn thẻ gợi ý bên trên..."
+                      rows={4}
+                      className="w-full bg-white border border-neutral-200 rounded-2xl p-5 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 transition-all resize-none font-sans shadow-sm"
+                    />
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full bg-neutral-950 hover:bg-black text-white py-4 rounded-2xl font-bold text-sm tracking-wider uppercase transition-all shadow-lg shadow-black/10"
+                  >
+                    {isLoading ? "Đang phân tích cấu trúc..." : "Kiểm tra chất lượng Prompt"}
+                  </motion.button>
+                </form>
+
+                {aiResponse && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="mt-8 p-5 bg-neutral-50 rounded-2xl border border-neutral-200"
+                  >
+                    <p className="text-sm text-neutral-700 font-sans leading-relaxed whitespace-pre-line">
+                      {aiResponse}
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+
+        </div>
+      </section>
+    </>
   );
 }
