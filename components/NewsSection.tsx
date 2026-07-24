@@ -7,38 +7,38 @@ import { ArrowUpRight } from "lucide-react";
 const articles = [
   {
     id: 1,
-    title: "AI trong giáo dục: Trợ thủ đắc lực hay rào cản sáng tạo?",
+    title: "Nền tảng kết hợp trí tuệ nhân tạo, game đoạt giải AI cho học sinh",
     source: "VNExpress",
-    date: "12 Thg 10, 2023",
+    date: "VnExpress AI",
     image: "/images/news/news1.png",
-    link: "https://vnexpress.net/ai-trong-giao-duc-tro-thu-dac-luc-hay-rao-can-sang-tao-4663820.html",
+    link: "https://vnexpress.net/nen-tang-ket-hop-tri-tue-nhan-tao-game-doat-giai-ai-cho-hoc-sinh-5067867.html",
     tag: "Phân tích"
   },
   {
     id: 2,
-    title: "Học sinh Việt Nam ứng dụng ChatGPT để tối ưu hóa việc học",
+    title: "Người Việt học cùng AI Gemini nhiều nhất Đông Nam Á",
     source: "Tuổi Trẻ",
-    date: "05 Thg 11, 2023",
+    date: "Tuổi Trẻ Công Nghệ",
     image: "/images/news/news2.png",
-    link: "https://tuoitre.vn/hoc-sinh-viet-nam-ung-dung-chatgpt-de-toi-uu-hoa-viec-hoc-20231105082133456.htm",
+    link: "https://tuoitre.vn/nguoi-viet-hoc-cung-ai-gemini-nhieu-nhat-dong-nam-a-100260714210044722.htm",
     tag: "Xu hướng"
   },
   {
     id: 3,
-    title: "Giáo dục thời 4.0: Khi Trí tuệ nhân tạo là 'người thầy' thứ hai",
+    title: "Việt Nam giành 3 huy chương tại Olympic Trí tuệ nhân tạo quốc tế",
     source: "VTV News",
-    date: "20 Thg 01, 2024",
+    date: "VTV Giáo Dục",
     image: "/images/news/news3.png",
-    link: "https://vtv.vn/giao-duc/giao-duc-thoi-40-khi-tri-tue-nhan-tao-la-nguoi-thay-thu-hai-202401200830156.htm",
+    link: "https://vtv.vn/viet-nam-gianh-3-huy-chuong-tai-olympic-tri-tue-nhan-tao-quoc-te-2026-100260301000441964.htm",
     tag: "Góc nhìn"
   },
   {
     id: 4,
-    title: "Bộ GD&ĐT khuyến cáo về việc sử dụng AI trong trường học",
+    title: "Nam sinh Đà Nẵng giành huy chương vàng Trí tuệ nhân tạo quốc tế",
     source: "Dân Trí",
-    date: "15 Thg 03, 2024",
+    date: "Dân Trí Giáo Dục",
     image: "/images/news/news4.png",
-    link: "https://dantri.com.vn/giao-duc/bo-gddt-khuyen-cao-ve-viec-su-dung-ai-trong-truong-hoc-202403150915223.htm",
+    link: "https://dantri.com.vn/giao-duc/nam-sinh-da-nang-gianh-huy-chuong-vang-tri-tue-nhan-tao-quoc-te-20260627122515481.htm",
     tag: "Chính sách"
   }
 ];

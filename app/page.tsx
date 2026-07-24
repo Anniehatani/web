@@ -32,7 +32,9 @@ export default function Home() {
       <Navbar onAdminToggle={handleAdminToggle} isAdminOpen={isAdminOpen} />
 
       {/* Hero Section with Bento Grid (3D Scroll + Intro Video) */}
-      <ThreeDScrollHero />
+      <div id="hero">
+        <ThreeDScrollHero />
+      </div>
 
       {/* Main content layout */}
       <main className="relative z-20 bg-white">
@@ -55,7 +57,7 @@ export default function Home() {
         </AnimatePresence>
 
         {/* AI Features Path Journey */}
-        <div className="relative overflow-hidden">
+        <div id="path" className="relative overflow-hidden">
           <BackgroundCrossedMarquee text="EXPLORE" opacity="0.09" />
           <AIPathJourney />
         </div>

@@ -7,8 +7,10 @@
 }
 
 body {
-  background-color: #ffffff; /* Trắng tinh khiết chuẩn Google Labs */
-  color: #1f2124; /* Màu đen xám Google Team USA */
+  background-color: #ffffff;
+  /* Trắng tinh khiết chuẩn Google Labs */
+  color: #1f2124;
+  /* Màu đen xám Google Team USA */
   font-family: var(--font-jakarta), sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -26,7 +28,7 @@ html {
 /* Hệ thống lưới Grid vô hình siêu mảnh của Google */
 .google-grid {
   background-size: 50px 50px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
 }
@@ -35,13 +37,16 @@ html {
 ::-webkit-scrollbar {
   width: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: #ffffff;
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.2);
 }
